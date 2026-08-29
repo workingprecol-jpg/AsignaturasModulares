@@ -14,7 +14,7 @@ END
 GO
 
 ALTER PROCEDURE dbo.AFGestionTarifaAsignaturaModular
-    @Accion VARCHAR(15),
+    @Id_Tipo NVARCHAR(2),
     @Id_Modulo INT = NULL,
     @Id_Tarifa INT = NULL,
     @Id_Periodo INT = NULL,
@@ -23,11 +23,11 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    SET @Accion = UPPER(LTRIM(RTRIM(ISNULL(@Accion, ''))));
+    SET @Id_Tipo = UPPER(LTRIM(RTRIM(ISNULL(@Id_Tipo, N''))));
     SET @Usuario = ISNULL(NULLIF(LTRIM(RTRIM(@Usuario)), N''), LEFT(SUSER_SNAME(), 100));
 
-    /* Lista todos los planes del período e indica su estado para el módulo. */
-    IF @Accion = 'LISTAR'
+    /* S: lista todos los planes del período e indica su estado para el módulo. */
+    IF @Id_Tipo = N'S'
     BEGIN
         IF @Id_Modulo IS NULL OR @Id_Periodo IS NULL
         BEGIN
@@ -61,8 +61,8 @@ BEGIN
         RETURN;
     END
 
-    /* Devuelve las cuotas o conceptos del plan seleccionado. */
-    IF @Accion = 'DETALLE'
+    /* D: devuelve las cuotas o conceptos del plan seleccionado. */
+    IF @Id_Tipo = N'D'
     BEGIN
         IF @Id_Tarifa IS NULL
         BEGIN
@@ -85,8 +85,8 @@ BEGIN
         RETURN;
     END
 
-    /* Inserta la asociación; si existe pero está inactiva, la reactiva. */
-    IF @Accion = 'ASOCIAR'
+    /* I: inserta la asociación; si existe pero está inactiva, la reactiva. */
+    IF @Id_Tipo = N'I'
     BEGIN
         IF @Id_Modulo IS NULL OR @Id_Tarifa IS NULL OR @Id_Periodo IS NULL
         BEGIN
@@ -140,8 +140,8 @@ BEGIN
         RETURN;
     END
 
-    /* Conserva el historial y deja de ofrecer el plan para esa asignatura. */
-    IF @Accion = 'DESACTIVAR'
+    /* E: conserva el historial y deja de ofrecer el plan para esa asignatura. */
+    IF @Id_Tipo = N'E'
     BEGIN
         IF @Id_Modulo IS NULL OR @Id_Tarifa IS NULL OR @Id_Periodo IS NULL
         BEGIN
@@ -159,9 +159,16 @@ BEGIN
         RETURN;
     END
 
-    RAISERROR('Acción no válida. Use LISTAR, DETALLE, ASOCIAR o DESACTIVAR.', 16, 1);
+    RAISERROR('Tipo no válido. Use S (selección), D (detalle), I (insertar/reactivar) o E (desactivar).', 16, 1);
 END
 GO
+
+/* Prueba de la consulta de planes para el módulo 1330 del período 125.
+   EXEC dbo.AFGestionTarifaAsignaturaModular
+        @Id_Tipo = N'S',
+        @Id_Modulo = 1330,
+        @Id_Periodo = 125;
+*/
 
 /*
     Recomendado: ejecutar una sola vez, después de revisar que no existan duplicados.

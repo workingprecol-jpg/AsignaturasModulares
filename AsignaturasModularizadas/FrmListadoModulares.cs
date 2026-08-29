@@ -458,7 +458,7 @@ namespace AsignaturasModularizadas
                 }
 
                 strSql = $@"EXEC dbo.AFGestionTarifaAsignaturaModular
-                                @Accion = 'LISTAR',
+                                @Id_Tipo = 'S',
                                 @Id_Modulo = {idAsignaturaPlanSeleccionada},
                                 @Id_Periodo = {IdPeriodoModular}";
 
@@ -518,7 +518,7 @@ namespace AsignaturasModularizadas
                 }
 
                 strSql = $@"EXEC dbo.AFGestionTarifaAsignaturaModular
-                                @Accion = 'DETALLE',
+                                @Id_Tipo = 'D',
                                 @Id_Tarifa = {idPlanSeleccionado}";
 
                 strClave = validar.Crear(strSql);
@@ -555,7 +555,7 @@ namespace AsignaturasModularizadas
 
                 string usuario = Environment.UserName.Replace("'", "''");
                 strSql = $@"EXEC dbo.AFGestionTarifaAsignaturaModular
-                                @Accion = 'ASOCIAR',
+                                @Id_Tipo = 'I',
                                 @Id_Modulo = {idAsignaturaPlanSeleccionada},
                                 @Id_Tarifa = {idPlanSeleccionado},
                                 @Id_Periodo = {IdPeriodoModular},
