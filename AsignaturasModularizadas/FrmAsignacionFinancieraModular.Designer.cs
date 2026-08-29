@@ -238,6 +238,7 @@ namespace AsignaturasModularizadas
             this.ultraGridProgramas.Text = "Programas";
             this.ultraGridProgramas.InitializeLayout += new Infragistics.Win.UltraWinGrid.InitializeLayoutEventHandler(this.ultraGridProgramas_InitializeLayout);
             this.ultraGridProgramas.ClickCell += new Infragistics.Win.UltraWinGrid.ClickCellEventHandler(this.ultraGridProgramas_ClickCell);
+            this.ultraGridProgramas.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ultraGridProgramas_MouseUp);
             // 
             // ultraGridEstudiantes
             // 

@@ -180,20 +180,34 @@ namespace AsignaturasModularizadas
 
         private void ultraGridProgramas_ClickCell(object sender, ClickCellEventArgs e)
         {
+            if (e.Cell != null)
+            {
+                SeleccionarPrograma(e.Cell.Row);
+            }
+        }
+
+        private void ultraGridProgramas_MouseUp(object sender, MouseEventArgs e)
+        {
+            SeleccionarPrograma(ultraGridProgramas.ActiveRow);
+        }
+
+        private void SeleccionarPrograma(UltraGridRow fila)
+        {
             try
             {
-                if (e.Cell == null || e.Cell.Row == null)
+                if (fila == null)
                 {
                     return;
                 }
 
-                idProgramaSeleccionado = ObtenerValor(e.Cell.Row, "Id_Programa", "Id_PrOfrecido");
-                if (idProgramaSeleccionado == "")
+                string idPrograma = ObtenerValor(fila, "Id_Programa", "Id_PrOfrecido");
+                if (idPrograma == "" || idPrograma == idProgramaSeleccionado)
                 {
                     return;
                 }
 
-                txtPrograma.Text = ObtenerValor(e.Cell.Row, "NombrePrograma", "Programa", "Nombre");
+                idProgramaSeleccionado = idPrograma;
+                txtPrograma.Text = ObtenerValor(fila, "NombrePrograma", "Programa", "Nombre");
                 LimpiarAsignaturaSeleccionada();
                 CargarEstudiantes();
                 CargarAsignaturas();
