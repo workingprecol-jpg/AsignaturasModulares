@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="01ad11c1-b300-4b5d-8743-4853c1498555" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://50.62.180.142/ServicioSIIE/sql.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="SQL.wsdl" MetadataType="Wsdl" ID="35873d02-44e0-4e29-9696-855127022cee" SourceId="1" SourceUrl="http://50.62.180.142/ServicioSIIE/SQL.svc?wsdl" />
+    <MetadataFile FileName="SQL.disco" MetadataType="Disco" ID="76fad2f0-7eb1-4129-bbae-f5c3a4411a65" SourceId="1" SourceUrl="http://50.62.180.142/ServicioSIIE/SQL.svc?disco" />
+    <MetadataFile FileName="SQL.xsd" MetadataType="Schema" ID="e15888f4-a919-473c-8795-07d926b65fb0" SourceId="1" SourceUrl="http://50.62.180.142/ServicioSIIE/SQL.svc?xsd=xsd0" />
+    <MetadataFile FileName="SQL1.xsd" MetadataType="Schema" ID="82517bb6-fa87-4ef4-a1ab-c1551f1aea3c" SourceId="1" SourceUrl="http://50.62.180.142/ServicioSIIE/SQL.svc?xsd=xsd1" />
+    <MetadataFile FileName="SQL2.xsd" MetadataType="Schema" ID="828927da-3eaa-402a-ad7d-226d17afe79e" SourceId="1" SourceUrl="http://50.62.180.142/ServicioSIIE/SQL.svc?xsd=xsd2" />
+    <MetadataFile FileName="SQL3.xsd" MetadataType="Schema" ID="73b5a508-ef7c-49e5-afea-f34b9a138e08" SourceId="1" SourceUrl="http://50.62.180.142/ServicioSIIE/SQL.svc?xsd=xsd3" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

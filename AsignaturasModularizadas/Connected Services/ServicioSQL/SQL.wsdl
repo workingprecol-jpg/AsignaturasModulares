@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://tempuri.org/" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" name="SQL" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://tempuri.org/Imports">
+      <xsd:import schemaLocation="http://50.62.180.142/ServicioSIIE/SQL.svc?xsd=xsd0" namespace="http://tempuri.org/" />
+      <xsd:import schemaLocation="http://50.62.180.142/ServicioSIIE/SQL.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+      <xsd:import schemaLocation="http://50.62.180.142/ServicioSIIE/SQL.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/" />
+      <xsd:import schemaLocation="http://50.62.180.142/ServicioSIIE/SQL.svc?xsd=xsd3" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ISQL_SQLCargarDts_InputMessage">
+    <wsdl:part name="parameters" element="tns:SQLCargarDts" />
+  </wsdl:message>
+  <wsdl:message name="ISQL_SQLCargarDts_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SQLCargarDtsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISQL_SQLCargarEsquema_InputMessage">
+    <wsdl:part name="parameters" element="tns:SQLCargarEsquema" />
+  </wsdl:message>
+  <wsdl:message name="ISQL_SQLCargarEsquema_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SQLCargarEsquemaResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISQL_SQLEjecutar_InputMessage">
+    <wsdl:part name="parameters" element="tns:SQLEjecutar" />
+  </wsdl:message>
+  <wsdl:message name="ISQL_SQLEjecutar_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SQLEjecutarResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISQL_SQLEjecutarTrans_InputMessage">
+    <wsdl:part name="parameters" element="tns:SQLEjecutarTrans" />
+  </wsdl:message>
+  <wsdl:message name="ISQL_SQLEjecutarTrans_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SQLEjecutarTransResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISQL_SQLEjecutarEscalar_InputMessage">
+    <wsdl:part name="parameters" element="tns:SQLEjecutarEscalar" />
+  </wsdl:message>
+  <wsdl:message name="ISQL_SQLEjecutarEscalar_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SQLEjecutarEscalarResponse" />
+  </wsdl:message>
+  <wsdl:message name="ISQL_SQLActualizarImagen_InputMessage">
+    <wsdl:part name="parameters" element="tns:SQLActualizarImagen" />
+  </wsdl:message>
+  <wsdl:message name="ISQL_SQLActualizarImagen_OutputMessage">
+    <wsdl:part name="parameters" element="tns:SQLActualizarImagenResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ISQL">
+    <wsdl:operation name="SQLCargarDts">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISQL/SQLCargarDts" message="tns:ISQL_SQLCargarDts_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISQL/SQLCargarDtsResponse" message="tns:ISQL_SQLCargarDts_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SQLCargarEsquema">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISQL/SQLCargarEsquema" message="tns:ISQL_SQLCargarEsquema_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISQL/SQLCargarEsquemaResponse" message="tns:ISQL_SQLCargarEsquema_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SQLEjecutar">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISQL/SQLEjecutar" message="tns:ISQL_SQLEjecutar_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISQL/SQLEjecutarResponse" message="tns:ISQL_SQLEjecutar_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SQLEjecutarTrans">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISQL/SQLEjecutarTrans" message="tns:ISQL_SQLEjecutarTrans_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISQL/SQLEjecutarTransResponse" message="tns:ISQL_SQLEjecutarTrans_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SQLEjecutarEscalar">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISQL/SQLEjecutarEscalar" message="tns:ISQL_SQLEjecutarEscalar_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISQL/SQLEjecutarEscalarResponse" message="tns:ISQL_SQLEjecutarEscalar_OutputMessage" />
+    </wsdl:operation>
+    <wsdl:operation name="SQLActualizarImagen">
+      <wsdl:input wsaw:Action="http://tempuri.org/ISQL/SQLActualizarImagen" message="tns:ISQL_SQLActualizarImagen_InputMessage" />
+      <wsdl:output wsaw:Action="http://tempuri.org/ISQL/SQLActualizarImagenResponse" message="tns:ISQL_SQLActualizarImagen_OutputMessage" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BasicHttpBinding_ISQL" type="tns:ISQL">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SQLCargarDts">
+      <soap:operation soapAction="http://tempuri.org/ISQL/SQLCargarDts" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SQLCargarEsquema">
+      <soap:operation soapAction="http://tempuri.org/ISQL/SQLCargarEsquema" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SQLEjecutar">
+      <soap:operation soapAction="http://tempuri.org/ISQL/SQLEjecutar" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SQLEjecutarTrans">
+      <soap:operation soapAction="http://tempuri.org/ISQL/SQLEjecutarTrans" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SQLEjecutarEscalar">
+      <soap:operation soapAction="http://tempuri.org/ISQL/SQLEjecutarEscalar" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SQLActualizarImagen">
+      <soap:operation soapAction="http://tempuri.org/ISQL/SQLActualizarImagen" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SQL">
+    <wsdl:port name="BasicHttpBinding_ISQL" binding="tns:BasicHttpBinding_ISQL">
+      <soap:address location="http://50.62.180.142/ServicioSIIE/SQL.svc" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
