@@ -4,26 +4,6 @@
     AFPlanes, AFPlanEstudiante, AFDetallePlanEstudiante y CALAsignaturaEnCurso.
 */
 
-IF COL_LENGTH(N'dbo.AFPlanEstudiante', N'Id_Matricula') IS NULL
-BEGIN
-    ALTER TABLE dbo.AFPlanEstudiante ADD Id_Matricula INT NULL;
-END
-GO
-
-IF COL_LENGTH(N'dbo.AFPlanEstudiante', N'Activo') IS NULL
-BEGIN
-    ALTER TABLE dbo.AFPlanEstudiante
-    ADD Activo BIT NOT NULL
-        CONSTRAINT DF_AFPlanEstudiante_Activo DEFAULT (1) WITH VALUES;
-END
-GO
-
-IF COL_LENGTH(N'dbo.AFPlanEstudiante', N'Usuario') IS NULL
-BEGIN
-    ALTER TABLE dbo.AFPlanEstudiante ADD Usuario NVARCHAR(100) NULL;
-END
-GO
-
 IF OBJECT_ID(N'dbo.AFPlanEstudianteModulo', N'U') IS NULL
 BEGIN
     CREATE TABLE dbo.AFPlanEstudianteModulo
@@ -35,8 +15,8 @@ BEGIN
         ValorOriginal INT NOT NULL,
         ValorDescuento INT NOT NULL CONSTRAINT DF_AFPlanEstudianteModulo_Descuento DEFAULT (0),
         ValorFinal INT NOT NULL,
-        Activo BIT NOT NULL CONSTRAINT DF_AFPlanEstudianteModulo_Activo DEFAULT (1),
-        Fecha DATETIME NOT NULL CONSTRAINT DF_AFPlanEstudianteModulo_Fecha DEFAULT (GETDATE()),
+        Estado BIT NOT NULL CONSTRAINT DF_AFPlanEstudianteModulo_Estado DEFAULT (1),
+        FechaRegistro DATETIME NOT NULL CONSTRAINT DF_AFPlanEstudianteModulo_FechaRegistro DEFAULT (GETDATE()),
         Usuario NVARCHAR(100) NULL,
         Id_AsigCurso INT NULL,
 
@@ -73,7 +53,7 @@ IF NOT EXISTS
 )
 BEGIN
     CREATE INDEX IX_AFPlanEstudianteModulo_PlanModulo
-        ON dbo.AFPlanEstudianteModulo (Id_PlanEstudiante, Id_Modulo, Activo);
+        ON dbo.AFPlanEstudianteModulo (Id_PlanEstudiante, Id_Modulo, Estado);
 END
 GO
 
@@ -174,8 +154,8 @@ BEGIN
             PEM.ValorOriginal,
             PEM.ValorDescuento,
             PEM.ValorFinal,
-            PEM.Activo,
-            PEM.Fecha
+            PEM.Estado AS Activo,
+            PEM.FechaRegistro AS Fecha
         FROM dbo.AFPlanEstudianteModulo AS PEM
         INNER JOIN dbo.AFPlanEstudiante AS PE
             ON PE.Id_PlanEstudiante = PEM.Id_PlanEstudiante
@@ -184,9 +164,8 @@ BEGIN
         WHERE PE.Id_Estudiante = @Id_Estudiante
           AND PE.Id_Periodo = @Id_Periodo
           AND (@Id_Programa IS NULL OR PE.Id_Programa = @Id_Programa)
-          AND PEM.Activo = 1
-          AND PE.Activo = 1
-        ORDER BY PEM.Fecha DESC, PEM.Id_PlanEstudianteModulo DESC;
+          AND ISNULL(PEM.Estado, 1) = 1
+        ORDER BY PEM.FechaRegistro DESC, PEM.Id_PlanEstudianteModulo DESC;
 
         RETURN;
     END;
@@ -241,8 +220,7 @@ BEGIN
             WHERE PE.Id_Estudiante = @Id_Estudiante
               AND PE.Id_Periodo = @Id_Periodo
               AND PEM.Id_Modulo = @Id_Modulo
-              AND PE.Activo = 1
-              AND PEM.Activo = 1
+              AND ISNULL(PEM.Estado, 1) = 1
         )
         BEGIN
             RAISERROR('El estudiante ya tiene esta asignatura modular activa en el período.', 16, 1);
@@ -272,17 +250,15 @@ BEGIN
               AND Id_Programa = @Id_Programa
               AND Id_Estudiante = @Id_Estudiante
               AND Id_Periodo = @Id_Periodo
-              AND Activo = 1
             ORDER BY Id_PlanEstudiante DESC;
 
             IF @Id_PlanEstudiante IS NULL
             BEGIN
                 INSERT INTO dbo.AFPlanEstudiante
-                    (Id_Plan, Id_Programa, Semestre, Fecha, Id_Estudiante, Id_Periodo,
-                     Id_Matricula, Activo, Usuario)
+                    (Id_Plan, Id_Programa, Semestre, Fecha, Id_Estudiante, Id_Periodo)
                 VALUES
                     (@Id_Tarifa, @Id_Programa, @Semestre, GETDATE(), @Id_Estudiante,
-                     @Id_Periodo, @Id_Matricula, 1, @Usuario);
+                     @Id_Periodo);
 
                 SET @Id_PlanEstudiante = SCOPE_IDENTITY();
             END;
@@ -307,7 +283,7 @@ BEGIN
 
             INSERT INTO dbo.AFPlanEstudianteModulo
                 (Id_PlanEstudiante, Id_Modulo, Id_TarifaAsignaturaModular,
-                 ValorOriginal, ValorDescuento, ValorFinal, Activo, Fecha, Usuario, Id_AsigCurso)
+                 ValorOriginal, ValorDescuento, ValorFinal, Estado, FechaRegistro, Usuario, Id_AsigCurso)
             VALUES
                 (@Id_PlanEstudiante, @Id_Modulo, @Id_TarifaAsignaturaModular,
                  @ValorOriginal, 0, @ValorFinal, 1, GETDATE(), @Usuario, @Id_AsigCurso);

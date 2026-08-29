@@ -387,7 +387,8 @@ namespace AsignaturasModularizadas
             if (idMatriculaSeleccionada == "")
             {
                 SIIEMessageBox.Clases.SIIEMessageBox.Show(
-                    "El estudiante fue encontrado, pero no tiene una matrícula modular activa para este período.",
+                    "El estudiante fue encontrado. El plan financiero se creará al asignar la tarifa, " +
+                    "pero antes debe tener una matrícula modular activa para este período.",
                     "Búsqueda de estudiante",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
@@ -539,6 +540,7 @@ namespace AsignaturasModularizadas
         {
             OcultarColumna(e, "Id_AsignaturaPlan");
             OcultarColumna(e, "Id_Docente");
+            OcultarColumna(e, "PrecioAleatorio");
         }
 
         private void ultraGridTarifas_InitializeLayout(object sender, InitializeLayoutEventArgs e)
