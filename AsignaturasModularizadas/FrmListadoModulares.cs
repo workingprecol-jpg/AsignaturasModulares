@@ -457,28 +457,10 @@ namespace AsignaturasModularizadas
                     return;
                 }
 
-                strSql = $@"SELECT
-                                TAM.Id_TarifaAsignaturaModular,
-                                P.Id_Plan AS Id_Tarifa,
-                                P.NombrePlan,
-                                P.TipoPlan,
-                                P.ValorOrdinaria,
-                                P.ValorExtraordinaria,
-                                P.ValorDescuento,
-                                P.Id_Periodo,
-                                ISNULL(TAM.Activo, CAST(0 AS bit)) AS Activo,
-                                CASE
-                                    WHEN TAM.Id_TarifaAsignaturaModular IS NULL THEN 'Disponible'
-                                    WHEN ISNULL(TAM.Activo, 0) = 1 THEN 'Asociado'
-                                    ELSE 'Inactivo'
-                                END AS Estado
-                            FROM dbo.AFPlan AS P
-                            LEFT JOIN dbo.AFTarifaAsignaturaModular AS TAM
-                                ON TAM.Id_Tarifa = P.Id_Plan
-                                AND TAM.Id_Modulo = {idAsignaturaPlanSeleccionada}
-                                AND TAM.Id_Periodo = {IdPeriodoModular}
-                            WHERE P.Id_Periodo = {IdPeriodoModular}
-                            ORDER BY P.NombrePlan";
+                strSql = $@"EXEC dbo.AFGestionTarifaAsignaturaModular
+                                @Accion = 'LISTAR',
+                                @Id_Modulo = {idAsignaturaPlanSeleccionada},
+                                @Id_Periodo = {IdPeriodoModular}";
 
                 strClave = validar.Crear(strSql);
                 SQLRespuesta respuesta = sw.SQLCargarDts(strSql, sConexion, strClave);
@@ -535,17 +517,9 @@ namespace AsignaturasModularizadas
                     return;
                 }
 
-                strSql = $@"SELECT
-                                Id_DetallePlan,
-                                Id_Plan AS Id_Tarifa,
-                                Concepto,
-                                Porcentaje,
-                                Valor,
-                                ValorExtr,
-                                FechaPago
-                            FROM dbo.AFDetallePlan
-                            WHERE Id_Plan = {idPlanSeleccionado}
-                            ORDER BY FechaPago, Id_DetallePlan";
+                strSql = $@"EXEC dbo.AFGestionTarifaAsignaturaModular
+                                @Accion = 'DETALLE',
+                                @Id_Tarifa = {idPlanSeleccionado}";
 
                 strClave = validar.Crear(strSql);
                 SQLRespuesta respuesta = sw.SQLCargarDts(strSql, sConexion, strClave);
@@ -580,29 +554,12 @@ namespace AsignaturasModularizadas
                 }
 
                 string usuario = Environment.UserName.Replace("'", "''");
-                strSql = $@"IF EXISTS
-                            (
-                                SELECT 1
-                                FROM dbo.AFTarifaAsignaturaModular
-                                WHERE Id_Tarifa = {idPlanSeleccionado}
-                                  AND Id_Modulo = {idAsignaturaPlanSeleccionada}
-                                  AND Id_Periodo = {IdPeriodoModular}
-                            )
-                            BEGIN
-                                UPDATE dbo.AFTarifaAsignaturaModular
-                                SET Activo = 1,
-                                    Usuario = N'{usuario}'
-                                WHERE Id_Tarifa = {idPlanSeleccionado}
-                                  AND Id_Modulo = {idAsignaturaPlanSeleccionada}
-                                  AND Id_Periodo = {IdPeriodoModular}
-                            END
-                            ELSE
-                            BEGIN
-                                INSERT INTO dbo.AFTarifaAsignaturaModular
-                                    (Id_Tarifa, Id_Modulo, Id_Periodo, Activo, Usuario)
-                                VALUES
-                                    ({idPlanSeleccionado}, {idAsignaturaPlanSeleccionada}, {IdPeriodoModular}, 1, N'{usuario}')
-                            END";
+                strSql = $@"EXEC dbo.AFGestionTarifaAsignaturaModular
+                                @Accion = 'ASOCIAR',
+                                @Id_Modulo = {idAsignaturaPlanSeleccionada},
+                                @Id_Tarifa = {idPlanSeleccionado},
+                                @Id_Periodo = {IdPeriodoModular},
+                                @Usuario = N'{usuario}'";
 
                 strClave = validar.Crear(strSql);
                 SQLRespuesta respuesta = sw.SQLEjecutar(strSql, sConexion, strClave);

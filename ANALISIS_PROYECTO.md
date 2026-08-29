@@ -65,30 +65,12 @@ AsignaturasModularizadas/
 En la última revisión de código se identificaron los siguientes avances significativos en [`FrmListadoModulares.cs`](file:///c:/Users/CBNSoporteCDI7/source/repos/AsignaturasModularizadas/AsignaturasModularizadas/FrmListadoModulares.cs):
 
 ### 4.1. Implementación de Consulta y Cruce de Planes de Pago (`CargarPlanesAsignaturaSeleccionada`)
-- Se implementó la consulta dinámica SQL que relaciona los planes generales (`dbo.AFPlan`) con las tarifas ya asignadas al módulo modular (`dbo.AFTarifaAsignaturaModular`):
+- Se implementó el consumo del Procedimiento Almacenado `dbo.AFGestionTarifaAsignaturaModular` con la acción `LISTAR`:
   ```sql
-  SELECT
-      TAM.Id_TarifaAsignaturaModular,
-      P.Id_Plan AS Id_Tarifa,
-      P.NombrePlan,
-      P.TipoPlan,
-      P.ValorOrdinaria,
-      P.ValorExtraordinaria,
-      P.ValorDescuento,
-      P.Id_Periodo,
-      ISNULL(TAM.Activo, CAST(0 AS bit)) AS Activo,
-      CASE
-          WHEN TAM.Id_TarifaAsignaturaModular IS NULL THEN 'Disponible'
-          WHEN ISNULL(TAM.Activo, 0) = 1 THEN 'Asociado'
-          ELSE 'Inactivo'
-      END AS Estado
-  FROM dbo.AFPlan AS P
-  LEFT JOIN dbo.AFTarifaAsignaturaModular AS TAM
-      ON TAM.Id_Tarifa = P.Id_Plan
-      AND TAM.Id_Modulo = {idAsignaturaPlanSeleccionada}
-      AND TAM.Id_Periodo = {IdPeriodoModular}
-  WHERE P.Id_Periodo = {IdPeriodoModular}
-  ORDER BY P.NombrePlan
+  EXEC dbo.AFGestionTarifaAsignaturaModular
+      @Accion = 'LISTAR',
+      @Id_Modulo = {idAsignaturaPlanSeleccionada},
+      @Id_Periodo = {IdPeriodoModular}
   ```
 - **Control de Estado Visual:** El resultado se asigna a `ultraGridPlanesAsignatura`, mostrando claramente si el plan está en estado `Disponible`, `Asociado` o `Inactivo`.
 
