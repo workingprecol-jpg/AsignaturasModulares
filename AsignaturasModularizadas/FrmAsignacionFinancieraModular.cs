@@ -187,7 +187,7 @@ namespace AsignaturasModularizadas
                     return;
                 }
 
-                idProgramaSeleccionado = ObtenerValor(e.Cell.Row, "Id_Programa");
+                idProgramaSeleccionado = ObtenerValor(e.Cell.Row, "Id_Programa", "Id_PrOfrecido");
                 if (idProgramaSeleccionado == "")
                 {
                     return;
@@ -237,6 +237,7 @@ namespace AsignaturasModularizadas
                 idMatriculaSeleccionada = ObtenerValor(e.Cell.Row, "Id_Matricula");
                 txtEstudiante.Text = ObtenerValor(e.Cell.Row, "Estudiante", "NombreEstudiante", "Nombre");
                 CargarAsignacionesEstudiante();
+                ActualizarEstadoAsignacion();
             }
             catch (Exception ex)
             {
@@ -294,7 +295,7 @@ namespace AsignaturasModularizadas
 
                 txtPlan.Text = ObtenerValor(e.Cell.Row, "NombrePlan", "Plan", "Nombre");
                 CargarDetallePlan();
-                btnAsignarTarifa.Enabled = idEstudianteSeleccionado != "" && idModuloSeleccionado != "";
+                ActualizarEstadoAsignacion();
             }
             catch (Exception ex)
             {
@@ -383,6 +384,7 @@ namespace AsignaturasModularizadas
             txtEstudiante.Text = fila["Estudiante"].ToString();
 
             CargarAsignacionesEstudiante();
+            ActualizarEstadoAsignacion();
 
             if (idMatriculaSeleccionada == "")
             {
@@ -397,9 +399,19 @@ namespace AsignaturasModularizadas
 
         private void ValidarDatosAsignacion()
         {
-            if (idProgramaSeleccionado == "" || idEstudianteSeleccionado == "" || idMatriculaSeleccionada == "")
+            if (idProgramaSeleccionado == "")
             {
-                throw new Exception("Seleccione programa y estudiante antes de asignar una tarifa.");
+                throw new Exception("Seleccione un programa antes de asignar la tarifa.");
+            }
+
+            if (idEstudianteSeleccionado == "")
+            {
+                throw new Exception("Busque y seleccione el estudiante antes de asignar la tarifa.");
+            }
+
+            if (idMatriculaSeleccionada == "")
+            {
+                throw new Exception("El estudiante no tiene matrícula modular activa para este período.");
             }
 
             if (idModuloSeleccionado == "" || idTarifaSeleccionada == "" || idTarifaAsignaturaModularSeleccionada == "")
@@ -411,6 +423,18 @@ namespace AsignaturasModularizadas
             {
                 throw new Exception("La asignatura debe tener Id_Docente para crear CALAsignaturaEnCurso.");
             }
+        }
+
+        private void ActualizarEstadoAsignacion()
+        {
+            btnAsignarTarifa.Enabled =
+                idProgramaSeleccionado != "" &&
+                idEstudianteSeleccionado != "" &&
+                idMatriculaSeleccionada != "" &&
+                idModuloSeleccionado != "" &&
+                idDocenteSeleccionado != "" &&
+                idTarifaSeleccionada != "" &&
+                idTarifaAsignaturaModularSeleccionada != "";
         }
 
         private DataSet EjecutarConsulta(string consulta)
@@ -528,6 +552,7 @@ namespace AsignaturasModularizadas
         private void ultraGridProgramas_InitializeLayout(object sender, InitializeLayoutEventArgs e)
         {
             OcultarColumna(e, "Id_Programa");
+            OcultarColumna(e, "Id_PrOfrecido");
         }
 
         private void ultraGridEstudiantes_InitializeLayout(object sender, InitializeLayoutEventArgs e)
