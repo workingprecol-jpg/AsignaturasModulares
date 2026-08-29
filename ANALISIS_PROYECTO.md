@@ -134,9 +134,10 @@ flowchart TD
 | **`HOHorariosModular 'S3'`** | SP | JSON `{"Id_Matricula": id}` | Asignaturas inscritas por estudiante. |
 | **`HOHorariosModular 'S4'`** | SP | Ninguno | Obtiene universo de matrículas modulares. |
 | **`HOHorariosModular 'S5'`** | SP | JSON Array de matrículas | Cruce de programas activos para retroalimentación visual en verde. |
-| **`dbo.AFPlan`** | Tabla / SQL Directo | `Id_Periodo`, `Id_Modulo` | Consulta de planes de pago aplicables a la asignatura modular. |
-| **`dbo.AFDetallePlan`** | Tabla / SQL Directo | `Id_Plan` | Consulta de desglose de cuotas y fechas de vencimiento del plan. |
-| **`dbo.AFTarifaAsignaturaModular`** | Tabla / SQLEjecutar | `Id_Tarifa`, `Id_Modulo`, `Id_Periodo`, `Usuario` | Inserción / actualización de la vinculación entre módulo y plan. |
+| **`dbo.AFGestionTarifaAsignaturaModular`** | SP | `@Id_Tipo = 'H'/'S'/'D'/'I'/'E'` | Gestión y consulta de tarifas asignadas a módulos. |
+| **`dbo.AFMatriculaAsignaturaModular`** | SP | `@Id_Tipo = 'B'/'S'/'I'` | Matrícula y asignación financiera de modulares a estudiantes. |
+| **`dbo.AFPlanEstudianteModulo`** | Tabla | `Id_PlanEstudiante`, `Id_Modulo` | Registro de relación financiera módulo-estudiante. |
+| **`dbo.CALAsignaturaEnCurso`** | Tabla | `Id_Matricula`, `Id_AsignaturaPlan` | Registro académico de la asignatura en curso. |
 
 ---
 
@@ -146,8 +147,8 @@ flowchart TD
 | :--- | :--- | :--- | :--- | :--- |
 | **Seguridad** | **Crítica** | Credenciales SQL Server en texto claro | `General.cs` (`ConexionDesarrollo`) | **Riesgo:** Exposición directa de credenciales en repositorios y binarios.<br>**Mitigación:** Externalizar a variables de entorno o almacén de secretos. |
 | **Seguridad** | **Alta** | Comunicación WCF sin cifrado de transporte | `App.config`, `General.WebServiceDesarrollo` | **Riesgo:** Tráfico vulnerable a inspección y alteración en red local/WAN.<br>**Mitigación:** Habilitar HTTPS (`BasicHttpsBinding` con seguridad de transporte). |
-| **Seguridad** | **Media** | Inyección SQL potencial en composición de cadenas | `FrmListadoModulares.cs` | **Riesgo:** Interpolación directa de variables en `strSql` (p. ej., `Environment.UserName` y variables de ID).<br>**Mitigación:** Utilizar parámetros SQL o encapsular la lógica en procedimientos almacenados dedicados. |
-| **Rendimiento** | **Media** | Llamadas WCF sincrónicas en el hilo de UI | `sw.SQLCargarDts`, `sw.SQLEjecutar` | **Riesgo:** Bloqueo momentáneo de la ventana durante la ejecución de consultas.<br>**Mitigación:** Migrar a `SQLCargarDtsAsync` y `SQLEjecutarAsync` con `async/await`. |
+| **Seguridad** | **Media** | Inyección SQL potencial en composición de cadenas | `FrmListadoModulares.cs` | **Riesgo:** Interpolación directa de variables en `strSql`.<br>**Mitigación:** Utilizar parámetros en procedimientos almacenados dedicados. |
+| **Rendimiento** | **Media** | Llamadas WCF sincrónicas en el hilo de UI | `sw.SQLCargarDts`, `sw.SQLEjecutar` | **Riesgo:** Bloqueo momentáneo de la ventana durante la ejecución de consultas.<br>**Mitigación:** Migrar a llamadas asíncronas con `async/await`. |
 | **Arquitectura** | **Baja** | Parametrización del período académico | `IdPeriodoModular = 125` | **Riesgo:** Período fijo que requerirá recompilación al iniciar un nuevo ciclo académico.<br>**Mitigación:** Cargar el período activo desde el contexto de inicio (`General.Ini`). |
 
 ---
@@ -158,6 +159,7 @@ flowchart TD
 - [x] Estandarización de títulos y nombres descriptivos de controles.
 - [x] Consulta y vinculación en interfaz de `dbo.AFPlan` y `dbo.AFDetallePlan`.
 - [x] Implementación de lógica de asociación `AFTarifaAsignaturaModular` con auditoría de usuario.
+- [x] Migración a Procedimiento Almacenado `dbo.AFGestionTarifaAsignaturaModular`.
+- [x] Creación del formulario `FrmAsignacionFinancieraModular` y procedimiento `dbo.AFMatriculaAsignaturaModular`.
 - [ ] Parametrización dinámica de `Id_Periodo` desde `General.Ini`.
-- [ ] Migración de consultas SQL inline a Procedimientos Almacenados en base de datos.
 - [ ] Asincronía en llamadas WCF para evitar congelamiento de interfaz.

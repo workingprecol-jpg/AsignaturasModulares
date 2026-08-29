@@ -90,6 +90,12 @@
     <Compile Include="FrmListadoModulares.Designer.cs">
       <DependentUpon>FrmListadoModulares.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmAsignacionFinancieraModular.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmAsignacionFinancieraModular.Designer.cs">
+      <DependentUpon>FrmAsignacionFinancieraModular.cs</DependentUpon>
+    </Compile>
     <Compile Include="General.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Program.cs" />

@@ -18,6 +18,9 @@ namespace AsignaturasModularizadas
                 case "FrmListadoModulares":
                      Forma = new Modular();
                     break;
+                case "FrmAsignacionFinancieraModular":
+                    Forma = new FrmAsignacionFinancieraModular();
+                    break;
                 default:
                     {
                         SIIEMessageBox.Clases.SIIEMessageBox.Show("El formulario inicial especificado es incorrecto", "SIIEPlus", MessageBoxButtons.OK, MessageBoxIcon.Error);

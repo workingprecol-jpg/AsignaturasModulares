@@ -26,6 +26,38 @@ BEGIN
     SET @Id_Tipo = UPPER(LTRIM(RTRIM(ISNULL(@Id_Tipo, N''))));
     SET @Usuario = ISNULL(NULLIF(LTRIM(RTRIM(@Usuario)), N''), LEFT(SUSER_SNAME(), 100));
 
+    /* H: devuelve únicamente las tarifas activas habilitadas para el módulo. */
+    IF @Id_Tipo = N'H'
+    BEGIN
+        IF @Id_Modulo IS NULL OR @Id_Periodo IS NULL
+        BEGIN
+            RAISERROR('Para consultar tarifas habilitadas se requieren Id_Modulo e Id_Periodo.', 16, 1);
+            RETURN;
+        END
+
+        SELECT
+            TAM.Id_TarifaAsignaturaModular,
+            P.Id_Plan AS Id_Tarifa,
+            P.NombrePlan,
+            P.TipoPlan,
+            P.ValorOrdinaria,
+            P.ValorExtraordinaria,
+            P.ValorDescuento,
+            P.Id_Periodo,
+            TAM.Activo,
+            'Habilitado' AS Estado
+        FROM dbo.AFTarifaAsignaturaModular AS TAM
+        INNER JOIN dbo.AFPlanes AS P
+            ON P.Id_Plan = TAM.Id_Tarifa
+           AND P.Id_Periodo = TAM.Id_Periodo
+        WHERE TAM.Id_Modulo = @Id_Modulo
+          AND TAM.Id_Periodo = @Id_Periodo
+          AND ISNULL(TAM.Activo, 0) = 1
+        ORDER BY P.NombrePlan;
+
+        RETURN;
+    END
+
     /* S: lista todos los planes del período e indica su estado para el módulo. */
     IF @Id_Tipo = N'S'
     BEGIN
@@ -159,7 +191,7 @@ BEGIN
         RETURN;
     END
 
-    RAISERROR('Tipo no válido. Use S (selección), D (detalle), I (insertar/reactivar) o E (desactivar).', 16, 1);
+    RAISERROR('Tipo no válido. Use H (habilitadas), S (selección), D (detalle), I (insertar/reactivar) o E (desactivar).', 16, 1);
 END
 GO
 
